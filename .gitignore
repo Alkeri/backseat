@@ -42,4 +42,4 @@ webapp/.next/
 *.tsbuildinfo
 next-env.d.ts
 
-.next
+/.next/
