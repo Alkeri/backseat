@@ -8,25 +8,41 @@ import { DBIssue, DBIssues } from '../lib/api/issue';
 
 import { Octokit } from 'octokit';
 import Link from 'next/link';
-import { Blockquote, Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import {
+  Badge,
+  Blockquote,
+  Box,
+  Card,
+  Flex,
+  Heading,
+  Text
+} from '@radix-ui/themes';
 
-const issueFetcher = async (
-  owner: string,
-  repo: string,
-  issueNumber: number
-) => {
+const getBadgeColor = (state: string) => {
+  switch (state) {
+    case 'open':
+      return 'green';
+    case 'closed':
+      return 'red';
+    case 'draft':
+      return 'gray';
+    default:
+      return 'gray';
+  }
+};
+
+const issueFetcher = async (args: string[]) => {
   const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN
+    auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
   });
 
-  const { data } = await octokit.request(
-    'GET /repos/{owner}/{repo}/issues/{issue_number}',
-    {
-      owner,
-      repo,
-      issue_number: issueNumber
-    }
-  );
+  const [owner, repo, issueNumber] = args;
+
+  const { data } = await octokit.rest.issues.get({
+    owner,
+    repo,
+    issue_number: issueNumber
+  });
 
   return data;
 };
@@ -45,7 +61,8 @@ const getWeight = (score: number) => {
 
 const IssueComponent = ({ issue }: { issue: DBIssue }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [owner, repo] = issue.repoName.split('/');
+  const owner = issue.repoName.split('/')[0];
+  const repo = issue.repoName.split('/')[1];
   const { data, error, isLoading } = useSWR(
     [owner, repo, issue.issueNumber],
     issueFetcher
@@ -71,10 +88,14 @@ const IssueComponent = ({ issue }: { issue: DBIssue }) => {
           setIsCollapsed(!isCollapsed);
         }}
         style={{ cursor: 'pointer' }}
+        gap="2"
       >
-        <Text size="3" weight="bold">
+        <Text>#{issue.issueNumber}</Text>
+        <Text size="3" weight="bold" style={{ marginLeft: '2' }}>
           {data.title}
         </Text>
+
+        <Badge color={getBadgeColor(data.state)}>{data.state}</Badge>
 
         <Box style={{ flex: 1 }} />
 
@@ -87,7 +108,7 @@ const IssueComponent = ({ issue }: { issue: DBIssue }) => {
         <Box>
           {issue.draftResponse ? (
             <Box py="2">
-              You should response with:
+              You should respond with:
               <Blockquote>
                 {issue.draftResponse
                   .trim()
@@ -125,11 +146,7 @@ const IssueComponent = ({ issue }: { issue: DBIssue }) => {
   );
 };
 
-export default async function IssuesTable({
-  issues: issues
-}: {
-  issues?: DBIssues;
-}) {
+export default async function IssuesTable({ issues }: { issues?: DBIssues }) {
   return (
     <Flex gap="3" direction="column" py="2">
       {issues?.map((issue: DBIssue) => (

@@ -20,10 +20,10 @@ export default async function IndexPage({
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Title>Issues</Title>
       <Text>A list of issues with AI-generated responses.</Text>
-      <IssuesTable issues={issues} />
+      {issues && <IssuesTable issues={issues} />}
       <Title>Pull Requests</Title>
       <Text>A list of pull requests with AI-generated responses.</Text>
-      <PullRequestsTable pullRequests={pullRequests} />
+      {pullRequests && <PullRequestsTable pullRequests={pullRequests} />}
     </main>
   );
 }

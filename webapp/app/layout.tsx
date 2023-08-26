@@ -8,9 +8,8 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Theme } from '@radix-ui/themes';
 
 export const metadata = {
-  title: 'Next.js 13 + PlanetScale + NextAuth + Tailwind CSS',
-  description:
-    'A user admin dashboard configured with Next.js, PlanetScale, NextAuth, Tailwind CSS, TypeScript, ESLint, and Prettier.'
+  title: 'Backseat',
+  description: 'Manage your OSS projects wiht a backseat driver you love.'
 };
 
 export default async function RootLayout({
@@ -20,7 +19,7 @@ export default async function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className="h-full bg-gray-50">
+      <html lang="en" className="h-full">
         <body className="h-full">
           <Theme>
             <Nav />

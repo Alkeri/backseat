@@ -9,15 +9,13 @@ import Link from 'next/link';
 import { Blockquote, Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { DBPullRequest } from '../lib/api/prs';
 
-const issueFetcher = async (
-  owner: string,
-  repo: string,
-  issueNumber: number
-) => {
+const pullRequestFetcher = async (args: string[]) => {
   console.log(process.env.GITHUB_TOKEN);
   const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN
+    auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
   });
+
+  const [owner, repo, issueNumber] = args;
 
   const { data } = await octokit.request(
     'GET /repos/{owner}/{repo}/pulls/{pull_number}',
@@ -45,12 +43,12 @@ const getWeight = (score: number) => {
 
 const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [owner, repo] = pr.repoName.split('/');
+  const owner = pr.repoName.split('/')[0];
+  const repo = pr.repoName.split('/')[1];
   const { data, error, isLoading } = useSWR(
     [owner, repo, pr.issueNumber],
-    issueFetcher
+    pullRequestFetcher
   );
-
   if (isLoading || !data) {
     return <Text>Loading...</Text>;
   }
@@ -59,11 +57,6 @@ const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
     return <Text>Error: {error}</Text>;
   }
 
-  const repoUrl = data.repository_url.replace(
-    'api.github.com/repos',
-    'github.com'
-  );
-
   return (
     <Card style={{ margin: 2 }}>
       <Flex
@@ -71,14 +64,16 @@ const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
           setIsCollapsed(!isCollapsed);
         }}
         style={{ cursor: 'pointer' }}
+        gap="2"
       >
+        <Text>#{pr.issueNumber}</Text>
         <Text size="3" weight="bold">
           {data.title}
         </Text>
 
         <Box style={{ flex: 1 }} />
 
-        <Link href={`${repoUrl}/pulls/${pr.issueNumber}`} target="_blank">
+        <Link href={`${data.html_url}/pulls/${pr.issueNumber}`} target="_blank">
           {pr.repoName}
         </Link>
       </Flex>
@@ -87,7 +82,7 @@ const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
         <Box>
           {pr.draftResponse ? (
             <Box py="2">
-              You should response with:
+              You should respond with:
               <Blockquote>
                 {pr.draftResponse
                   .trim()
