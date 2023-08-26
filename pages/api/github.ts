@@ -24,6 +24,8 @@ async function handler(_req: NextApiRequest, res: NextApiResponse) {
       break;
     case "issues":
         console.log('Received an issue event');
+        break;
+
     case 'installation':
         console.log("received installation event")
         if(body.action == 'created') {
@@ -32,7 +34,7 @@ async function handler(_req: NextApiRequest, res: NextApiResponse) {
         else if(body.action == 'deleted'){
             console.log("deleted")
         }
-
+        break;
     // Handle other events
     default:
       console.log(`Received unknown event ${headers['x-github-event']}`);
