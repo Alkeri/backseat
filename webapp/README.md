@@ -1,41 +1,77 @@
-# MongoDB Starter – Developer Directory
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/9113740/201498864-2a900c64-d88f-4ed4-b5cf-770bcb57e1f5.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
+  <img alt="Shows all of the tools in the stack for this template, also listed in the README file." src="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
+</picture>
 
-A developer directory built on [Next.js](https://nextjs.org/) and [MongoDB Atlas](https://www.mongodb.com/atlas/database), deployed on [Vercel](https://vercel.com/) with the [Vercel + MongoDB integration](https://vercel.com/integrations/mongodbatlas).
+<div align="center"><strong>Next.js 13 Admin Dashboard Template</strong></div>
+<div align="center">Built with the Next.js App Router</div>
+<br />
+<div align="center">
+<a href="http://admin-dash-template.vercel.sh/">Demo</a>
+<span> · </span>
+<a href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-planetscale-react-nextjs">Clone & Deploy</a>
+<span>
+</div>
 
-![](/public/og.png)
+## Overview
 
-Featured on the [MongoDB World](https://www.mongodb.com/world-2022) keynote.
+This is a starter template using the following stack:
 
-## Deployment Instructions
+- Framework - [Next.js 13](https://nextjs.org/13)
+- Language - [TypeScript](https://www.typescriptlang.org)
+- Auth - [NextAuth.js](https://next-auth.js.org)
+- Database - [PlanetScale](https://planetscale.com)
+- Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
+- Styling - [Tailwind CSS](https://tailwindcss.com)
+- Components - [Tremor](https://www.tremor.so)
+- Analytics - [Vercel Analytics](https://vercel.com/analytics)
+- Linting - [ESLint](https://eslint.org)
+- Formatting - [Prettier](https://prettier.io)
 
-You will need to create a [GitHub OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) to use this starter. Here are the steps:
+This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
 
-1. Go to https://github.com/settings/developers and create a new OAuth application
-2. Name your application **"MongoDB Starter"**
-3. Set the homepage URL to **`https://vercel.app`** for now (we'll change this later)
-4. Set the authorization callback URL to **`https://vercel.app/api/auth/callback/github`** for now (we'll change this later)
-5. Click "Register application".
-6. Once the application is created, copy the "Client ID". This will be your **`GITHUB_CLIENT_ID`**.
-7. Generate a new client secret and copy that too. This will be your **`GITHUB_CLIENT_SECRET`**.
-8. Generate a random secret [here](https://generate-secret.vercel.app/32). This will be your **`NEXTAUTH_SECRET`**.
-9. Click on this button below to clone and deploy this template to Vercel.
+## Getting Started
 
-  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fmongodb-starter&project-name=mongodb-nextjs&repository-name=mongodb-nextjs&demo-title=MongoDB%20Developer%20Directory&demo-description=Log%20in%20with%20GitHub%20to%20create%20a%20directory%20of%20contacts.&demo-url=https%3A%2F%2Fmongodb.vercel.app%2F&demo-image=https%3A%2F%2Fmongodb.vercel.app%2Fog.png&integration-ids=oac_jnzmjqM10gllKmSrG0SGrHOH&env=GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET,NEXTAUTH_SECRET&envDescription=Instructions%20on%20how%20to%20configure%20these%20env%20vars:&envLink=https://github.com/vercel/mongodb-starter/blob/main/.env.example)
+After creating an account with PlanetScale, you'll need to create a new database and retrieve the `DATABASE_URL`. Optionally, you can use Vercel integration, which will add the `DATABASE_URL` to the environment variables for your project.
 
-10. Once your application is deployed, **edit the homepage & callback URLs in your GitHub OAuth App to match your deployment URL**.
+This is the provided `.env.local.example` file, which you'll want to use to create your own `.env.local` file:
 
-## Demo
+```
+# https://vercel.com/integrations/planetscale
+DATABASE_URL=
 
-https://mongodb.vercel.app
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET= # Linux: `openssl rand -hex 32` or go to https://generate-secret.now.sh/32
 
-## Vercel + MongoDB Integration
+# https://next-auth.js.org/providers/github
+GITHUB_ID=
+GITHUB_SECRET=
+```
 
-https://vercel.com/integrations/mongodbatlas
+Next, inside PlanetScale, create a users table based on the schema defined in this repository.
 
-## Tech Stack
+```
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `name` varchar(255),
+  `username` varchar(255),
+  PRIMARY KEY (`id`)
+);
+```
 
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [NextAuth.js](https://next-auth.js.org/)
-- [MongoDB Atlas](https://www.mongodb.com/atlas/database)
-- [Vercel](https://vercel.com/)
+Insert a row for testing:
+
+```
+INSERT INTO `users` (`id`, `email`, `name`, `username`) VALUES (1, 'me@site.com', 'Me', 'username');
+```
+
+Finally, run the following commands to start the development server:
+
+```
+pnpm install
+pnpm dev
+```
+
+You should now be able to access the application at http://localhost:3000.
