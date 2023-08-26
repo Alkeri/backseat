@@ -1,6 +1,8 @@
 import 'server-only';
 import clientPromise from '../mongodb';
 
+import { Octokit, App } from 'octokit';
+
 export interface DBIssue {
   _id: string;
   issueNumber: number;
@@ -29,5 +31,7 @@ export async function listDBIssues(
     .limit(100)
     .toArray();
 
-  return JSON.parse(JSON.stringify(dbIssues));
+  const issues = JSON.parse(JSON.stringify(dbIssues));
+
+  return issues;
 }

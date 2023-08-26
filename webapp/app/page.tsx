@@ -22,9 +22,7 @@ export default async function IndexPage({
         A list of users retrieved from a MySQL database (PlanetScale).
       </Text>
       <Search />
-      <Card className="mt-6">
-        <IssuesTable issues={issues} />
-      </Card>
+      <IssuesTable issues={issues} />
     </main>
   );
 }
