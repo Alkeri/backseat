@@ -20,6 +20,15 @@ def check_for_dupes(repo_id: int, issue_number: int, verbose=False):
 
     embeddings_collection = mongo_client["backseat"]["embeddings"]
 
+    mongo_client["backseat"]["issues"].update_one(
+        {
+            "type": "issue",
+            "repoId": repo_id,
+            "issueNumber": issue_number,
+        },
+        {"$set": {"status": "generating"}},
+    )
+
     # first, get the embeddings for the new issue
     issue = embeddings_collection.find_one(
         {
@@ -38,16 +47,24 @@ def check_for_dupes(repo_id: int, issue_number: int, verbose=False):
                         "vector": issue["cohereSmallEmbedding"],
                         "path": "cohereSmallEmbedding",
                         "k": 11,
+                        "filter": {
+                            "compound": {
+                                "must": {
+                                    "text": {
+                                        "query": "issue",
+                                        "path": "type",
+                                    }
+                                },
+                                "mustNot": {
+                                    "equals": {
+                                        "value": issue_number,
+                                        "path": "issueNumber",
+                                    },
+                                },
+                            }
+                        },
                     },
                     "scoreDetails": True,
-                },
-            },
-            {
-                "$match": {
-                    "issueNumber": {
-                        "$ne": issue_number,
-                    },
-                    "type": "issue",
                 },
             },
             {
@@ -83,6 +100,7 @@ def check_for_dupes(repo_id: int, issue_number: int, verbose=False):
     update = {
         "$set": {
             "similarIssues": mdb_similar_issues,
+            "status": "done",
         },
     }
     if(verbose):

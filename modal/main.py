@@ -109,6 +109,7 @@ def handle_issue(
         "repoId": issue_input.repo_id,
         "repoName": issue_input.repo_name,
         "issueNumber": issue_input.issue_number,
+        "status": "generating",
     }
 
     mongo_client["backseat"]["issues"].update_one(
@@ -157,6 +158,15 @@ def handle_issue(
     )
 
     print("Wrote embedding to MongoDB")
+
+    mongo_client["backseat"]["issues"].update_one(
+        {
+            "type": "issue",
+            "repoId": issue_input.repo_id,
+            "issueNumber": issue_input.issue_number,
+        },
+        {"$set": {"status": "done"}},
+    )
 
     if post_process:
         check_for_dupes(
