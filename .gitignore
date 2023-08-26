@@ -33,7 +33,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # nextjs
-webapp2/.next/
+webapp/.next/
 /out/
 
 # vercel
