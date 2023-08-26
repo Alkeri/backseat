@@ -72,7 +72,7 @@ def draft_issue_response(repo_name: str, issue_number: int):
 
     embedding = cohere_response.embeddings[0]
 
-    similar_issues = embeddings_collection.aggregate(
+    contents = embeddings_collection.aggregate(
         [
             {
                 "$search": {
@@ -83,12 +83,6 @@ def draft_issue_response(repo_name: str, issue_number: int):
                         "k": 11,
                         "filter": {
                             "compound": {
-                                "must": {
-                                    "text": {
-                                        "query": "issue",
-                                        "path": "type",
-                                    },
-                                },
                                 "mustNot": {
                                     "equals": {
                                         "value": issue_number,
@@ -106,9 +100,12 @@ def draft_issue_response(repo_name: str, issue_number: int):
                     "score": {
                         "$meta": "searchScoreDetails",
                     },
+                    "type": 1,
+                    "path": 1,
                     "issueNumber": 1,
                     "issueType": 1,
                     "repoId": 1,
+                    "text": 1,
                 }
             },
         ]
@@ -116,25 +113,25 @@ def draft_issue_response(repo_name: str, issue_number: int):
 
     print("Got similar issues")
 
-    # generate the text for similar issues
-    similar_issue_text = ""
+    # generate the text for relevant issues
+    relevant_content = ""
 
-    for similar_issue in similar_issues:
-        if similar_issue["score"]["value"] < 0.75:
+    for content in contents:
+        if content["score"]["value"] < 0.75:
+            print("Not using content")
+            print(content)
             continue
 
-        similar_issue_text += f"#{similar_issue['issueNumber']}\n"
+        relevant_content += "\n" + "-" * 80 + "\n"
+        relevant_content += f"{content['type']} "
+        if content["type"] == "issue" or content["type"] == "pr":
+            relevant_content += f"#{content['issueNumber']}"
+        elif content["type"] == "file":
+            relevant_content += f"{content['path']}"
 
         # get the issue text
-        similar_issue_text += mongo_client["backseat"]["embeddings"].find_one(
-            {
-                "type": "issue",
-                "repoId": similar_issue["repoId"],
-                "issueNumber": similar_issue["issueNumber"],
-            }
-        )["text"]
-
-        similar_issue_text += "\n" + "-" * 80 + "\n"
+        relevant_content += f"\n{content['text']}\n\n"
+        relevant_content += "\n" + "-" * 80 + "\n"
 
     import jinja2
 
@@ -146,7 +143,8 @@ You are an AI assistant responsible for helping users triage issues in open-sour
 A user has just opened this issue:
 ```\n{{ issue_content }}\n```
 
-Draft a response (and only a response) that will be written as if you were the project manager. Your response should be based on the following (in order):
+Draft a response (and only a response) that will be written as if you were the project administrator. Your response should be based on the following (in order):
+- if you can propose code changes to fix a bug or implement a feature, do so
 - if the issue is a duplicate, say so and encourage the user to close the issue and comment on the original issue
 - if the issue is a feature request, say so and encourage the user to open a pull request
 - if the issue is a bug, say so and encourage the user to open a pull request
@@ -158,18 +156,20 @@ You should not include the instructions in your response. Try to keep the respon
 
 Do not include text like "If you are requesting a new feature, ...". Instead, you should be able to determine if the issue is a feature request or a bug and respond accordingly.
 
-We've done a search to find similar issues, and found these:
-{{ similar_issues }}
+We've done a search to find potentially relevant content in the repository, and found these:
+{{ relevant_content }}
 """
     )
 
     # render the prompt
     prompt = template.render(
         issue_content=issue_content,
-        similar_issues=similar_issue_text,
+        relevant_content=relevant_content,
     )
 
+    print("=" * 80)
     print(prompt)
+    print("=" * 80)
 
     # generate the response
     response = cohere_client.generate(
@@ -182,7 +182,8 @@ We've done a search to find similar issues, and found these:
 
     first_response = response[0].text
 
-    print("updating...")
+    print("Response:")
+    print(first_response)
     pprint(
         {
             "type": "issue",
