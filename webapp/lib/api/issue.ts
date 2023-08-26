@@ -10,6 +10,7 @@ export interface DBIssue {
   type: string;
   repoName: string;
   draftResponse: string;
+  status: string;
   similarIssues: {
     issueNumber: number;
     repoId: number;
