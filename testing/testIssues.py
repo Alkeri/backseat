@@ -46,6 +46,8 @@ while True:
 # Now all_issues contains all the issues from the repo
 print(f"Fetched {len(all_issues)} issues from {owner}/{repo}.")
 
+print(all_issues[0])
+
 
 # After fetching all issues in `all_issues` list
 with open('issues_list.txt', 'w') as f:
