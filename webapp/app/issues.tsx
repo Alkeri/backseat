@@ -31,7 +31,7 @@ const getBadgeColor = (state: string) => {
   }
 };
 
-const issueFetcher = async (args: string[]) => {
+const issueFetcher = async (args: any[]) => {
   const octokit = new Octokit({
     auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
   });

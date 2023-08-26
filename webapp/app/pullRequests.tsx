@@ -6,10 +6,31 @@ import useSWR from 'swr';
 
 import { Octokit } from 'octokit';
 import Link from 'next/link';
-import { Blockquote, Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import {
+  Badge,
+  Blockquote,
+  Box,
+  Card,
+  Flex,
+  Heading,
+  Text
+} from '@radix-ui/themes';
 import { DBPullRequest } from '../lib/api/prs';
 
-const pullRequestFetcher = async (args: string[]) => {
+const getBadgeColor = (state: string) => {
+  switch (state) {
+    case 'open':
+      return 'green';
+    case 'closed':
+      return 'red';
+    case 'draft':
+      return 'gray';
+    default:
+      return 'gray';
+  }
+};
+
+const pullRequestFetcher = async (args: any[]) => {
   console.log(process.env.GITHUB_TOKEN);
   const octokit = new Octokit({
     auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
@@ -70,6 +91,8 @@ const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
         <Text size="3" weight="bold">
           {data.title}
         </Text>
+
+        <Badge color={getBadgeColor(data.state)}>{data.state}</Badge>
 
         <Box style={{ flex: 1 }} />
 
