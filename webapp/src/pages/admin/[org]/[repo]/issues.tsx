@@ -5,43 +5,49 @@ import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.
 import React from "react";
 import AdminLayout from "layouts/admin";
 import { TableData } from "views/admin/default/variables/columnsData";
-import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import { GetStaticProps } from "next";
 import clientPromise from "lib/mongodb";
+import { listDBIssues, DBIssue, DBIssues } from "lib/api/issue";
 
-interface Params extends ParsedUrlQuery {
+interface Params {
   org: string;
   repo: string;
+  issues: DBIssues;
 }
 
 // This gets called on every request
 export async function getServerSideProps(context: any) {
+  const { org, repo } = context.params;
+
   try {
     await clientPromise;
   } catch (e: any) {
     // cluster is still provisioning
     return {
-      org: "org",
-      repo: "repo",
+      org: org,
+      repo: repo,
+      issues: [],
     };
   }
-  // Fetch data based on postId
-  const { org, repo } = context.params;
-  // const post = await fetch(`https://api.example.com/posts/${postId}`).then(res => res.json());
 
-  // Pass post data to the page via props
-  return { props: { org, repo } };
+  const issues = await listDBIssues(org, repo);
+
+  return { props: { org, repo, issues } };
 }
 
-export default function Issues({ org, repo }: Params) {
+export default function Issues({ org, repo, issues }: Params) {
   return (
     <AdminLayout>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-        <Text>
-          {" "}
-          Org ID: {org} Repo ID: {repo}{" "}
-        </Text>
+        <Text>{org}</Text>
+        <Text>Repo ID: {repo}</Text>
+        {issues.map((issue: DBIssue) => (
+          <Text>
+            {" "}
+            Issue ID: {issue._id} Issue Title: {issue.issueNumber}{" "}
+          </Text>
+        ))}
+
         <ComplexTable
           columnsData={columnsDataComplex}
           tableData={tableDataComplex as unknown as TableData[]}

@@ -5,7 +5,6 @@ import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.
 import React from "react";
 import AdminLayout from "layouts/admin";
 import { TableData } from "views/admin/default/variables/columnsData";
-import { useRouter } from "next/router";
 
 export default function Issues() {
   return (
