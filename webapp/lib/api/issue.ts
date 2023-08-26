@@ -9,12 +9,13 @@ export interface DBIssue {
   repoId: number;
   type: string;
   repoName: string;
+  draftResponse: string;
   similarIssues: {
     issueNumber: number;
     repoId: number;
     issueType: string;
     score: number;
-  };
+  }[];
 }
 
 export type DBIssues = DBIssue[];

@@ -4,7 +4,6 @@ import '@radix-ui/themes/styles.css';
 import { Analytics } from '@vercel/analytics/react';
 import Nav from './nav';
 import Toast from './toast';
-import { Suspense } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Theme } from '@radix-ui/themes';
 
@@ -24,9 +23,7 @@ export default async function RootLayout({
       <html lang="en" className="h-full bg-gray-50">
         <body className="h-full">
           <Theme>
-            <Suspense>
-              <Nav />
-            </Suspense>
+            <Nav />
             {children}
             <Analytics />
             <Toast />

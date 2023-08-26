@@ -7,10 +7,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
-const navigation = [
-  { name: 'Repos', href: '/' },
-  { name: 'Triage Issues', href: '/triage-issues' }
-];
+const navigation = [{ name: 'Issues', href: '/' }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
