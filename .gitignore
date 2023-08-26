@@ -43,3 +43,5 @@ webapp/.next/
 next-env.d.ts
 
 /.next/
+
+*.next
