@@ -9,7 +9,7 @@ stub = Stub()
 
 custom_image = Image.debian_slim().pip_install("pygithub", "pymongo", "cohere")
 
-GITHUB_APP_ID = "381420"
+GITHUB_APP_ID = 381420
 
 
 @dataclass
@@ -119,6 +119,47 @@ def handle_issue_comment(
     print("Wrote to MongoDB")
 
 
+def handle_installation(cohere_client, mongo_client, repo_name: str):
+    """
+    Handles installation events.
+    """
+    from github import Github, GithubIntegration
+
+    app = GithubIntegration(GITHUB_APP_ID, os.getenv("GITHUB_APP_PRIVATE_KEY"))
+    print("Got integration")
+
+    owner = repo_name.split("/")[0]
+    repo = repo_name.split("/")[1]
+    installation = app.get_installation(owner, repo)
+    installation_token = app.get_access_token(installation.id).token
+
+    print(f"Installation token: {installation_token}")
+
+    github = Github(installation_token)
+
+    # list issues
+    gh_repo = github.get_repo(repo_name)
+    issues = gh_repo.get_issues()
+
+    print(f"Found issues")
+
+    for issue in issues:
+        # don't handle PRs
+        if issue.pull_request is not None:
+            continue
+
+        handle_issue(
+            cohere_client,
+            mongo_client,
+            IssueInput(
+                repo_name=repo_name,
+                issue_number=issue.number,
+                title=issue.title,
+                body=issue.body,
+            ),
+        )
+
+
 @stub.function(secret=Secret.from_name("backseat"), image=custom_image)
 @web_endpoint(method="POST")
 async def github_app_webhook(
@@ -177,7 +218,11 @@ async def github_app_webhook(
 
             action = body.get("action")
             if action == "created":
-                print("Installation created")
+                handle_installation(
+                    cohere_client,
+                    mongo_client,
+                    body.get("repositories")[0].get("full_name"),
+                )
 
             elif action == "deleted":
                 print("Installation deleted")
