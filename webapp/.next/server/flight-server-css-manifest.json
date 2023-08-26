@@ -1,0 +1,15 @@
+{
+  "cssImports": {
+    "/Users/iancmoritz/Projects/backseat/webapp/app/layout.tsx": [
+      "/Users/iancmoritz/Projects/backseat/webapp/app/globals.css"
+    ]
+  },
+  "cssModules": {
+    "/Users/iancmoritz/Projects/backseat/webapp/app/page": [
+      "/Users/iancmoritz/Projects/backseat/webapp/app/globals.css"
+    ],
+    "/Users/iancmoritz/Projects/backseat/webapp/app/playground/page": [
+      "/Users/iancmoritz/Projects/backseat/webapp/app/globals.css"
+    ]
+  }
+}
