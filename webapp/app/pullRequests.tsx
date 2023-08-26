@@ -4,8 +4,6 @@ import { useState } from 'react';
 
 import useSWR from 'swr';
 
-import { DBIssue, DBIssues } from '../lib/api/issue';
-
 import { Octokit } from 'octokit';
 import Link from 'next/link';
 import { Blockquote, Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
@@ -21,7 +19,7 @@ const issueFetcher = async (
   });
 
   const { data } = await octokit.request(
-    'GET /repos/{owner}/{repo}/issues/{issue_number}',
+    'GET /repos/{owner}/{repo}/pulls/{issue_number}',
     {
       owner,
       repo,
@@ -44,11 +42,11 @@ const getWeight = (score: number) => {
   return 'light';
 };
 
-const IssueComponent = ({ issue }: { issue: DBIssue }) => {
+const PullRequestComponent = ({ pr }: { pr: DBPullRequest }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [owner, repo] = issue.repoName.split('/');
+  const [owner, repo] = pr.repoName.split('/');
   const { data, error, isLoading } = useSWR(
-    [owner, repo, issue.issueNumber],
+    [owner, repo, pr.issueNumber],
     issueFetcher
   );
 
@@ -79,18 +77,18 @@ const IssueComponent = ({ issue }: { issue: DBIssue }) => {
 
         <Box style={{ flex: 1 }} />
 
-        <Link href={`${repoUrl}/issues/${issue.issueNumber}`} target="_blank">
-          {issue.repoName}
+        <Link href={`${repoUrl}/pulls/${pr.issueNumber}`} target="_blank">
+          {pr.repoName}
         </Link>
       </Flex>
 
       {!isCollapsed && (
         <Box>
-          {issue.draftResponse ? (
+          {pr.draftResponse ? (
             <Box py="2">
               You should response with:
               <Blockquote>
-                {issue.draftResponse
+                {pr.draftResponse
                   .trim()
                   .split('\n')
                   .map((line) => (
@@ -102,23 +100,6 @@ const IssueComponent = ({ issue }: { issue: DBIssue }) => {
             <Box py="2">
               <Text>No draft response found.</Text>
             </Box>
-          )}
-
-          {issue.similarIssues && (
-            <Flex gap="2" py="2">
-              <Heading size="3">Related Issues</Heading>
-              <Box style={{ flex: 1 }} />
-              {issue.similarIssues.map((relatedIssue) => (
-                <Link
-                  href={`${repoUrl}/issues/${relatedIssue.issueNumber}`}
-                  target="_blank"
-                >
-                  <Text weight={getWeight(relatedIssue.score)} color="blue">
-                    #{relatedIssue.issueNumber}
-                  </Text>
-                </Link>
-              ))}
-            </Flex>
           )}
         </Box>
       )}
@@ -134,7 +115,7 @@ export default async function PullRequestsTable({
   return (
     <Flex gap="3" direction="column" py="2">
       {pullRequests?.map((pr) => (
-        <>{pr._id}</>
+        <PullRequestComponent pr={pr} />
       ))}
     </Flex>
   );
