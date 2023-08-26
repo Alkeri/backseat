@@ -1,5 +1,5 @@
 {
 	"dependencies": {
-		"@headlessui/tailwindcss": "^0.2.0"
+		"@clerk/nextjs": "^4.23.2"
 	}
 }
