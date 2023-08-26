@@ -14,16 +14,17 @@ const issueFetcher = async (
   repo: string,
   issueNumber: number
 ) => {
+  console.log(process.env.GITHUB_TOKEN);
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN
   });
 
   const { data } = await octokit.request(
-    'GET /repos/{owner}/{repo}/pulls/{issue_number}',
+    'GET /repos/{owner}/{repo}/pulls/{pull_number}',
     {
       owner,
       repo,
-      issue_number: issueNumber
+      pull_number: issueNumber
     }
   );
 
@@ -115,7 +116,7 @@ export default async function PullRequestsTable({
   return (
     <Flex gap="3" direction="column" py="2">
       {pullRequests?.map((pr) => (
-        <PullRequestComponent pr={pr} />
+        <PullRequestComponent pr={pr} key={pr._id} />
       ))}
     </Flex>
   );
