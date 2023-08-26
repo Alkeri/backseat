@@ -1,0 +1,214 @@
+Issue #493: dbt with kubernetes
+Issue #491: Unable to use DbtTaskGroup with Kubernetes 
+Issue #486: Unable to select specific models to run in a dag 
+Issue #484: Disk space leak due to empty folders creation 
+Issue #483: Virtualenv execution mode does not cleanup venv after exception
+Issue #480: Spark Thirft Profile Does not Pick up Connection from Secrets Manager
+Issue #479: Wrong profile mapping for SnowflakePrivateKeyPemProfileMapping
+Issue #478: Dynamic dbt configuration with airflow jinja template fields for SparkThriftProfileMapping host value
+Issue #477: Don't crash parsing when there's an unrecognized node type
+Issue #476: Logs are not properly propagated on 1.0.5 on Airflow
+Issue #474: Add tests after snapshots
+Issue #473: Dataset Emissions
+Issue #468: Allow use of enviroment variables in profiles when using profiles_yml_filepath
+Issue #465: Generate API Docs
+Issue #464: Bug on Select Node Logic in v1.0.5 
+Issue #462: Provide run_results.json info to the user
+Issue #460: Error if user supplies string and Cosmos expects a Path
+Issue #455: Add support for GKEStartPodOperator
+Issue #451: Add docs on two-repo setup with Kubernetes/Docker operators
+Issue #448: Support loading manifest from S3
+Issue #447: Improve cosmos logs to always include "astronomer-cosmos"
+Issue #445: Run `dbt deps` when using `load_mode=LoadMode.DBT_LS`
+Issue #444: dbt >= 1.6 breaks cosmos
+Issue #443: GoogleCloudServiceAccountDictProfileMapping should create yaml fields
+Issue #442: docker compose fails for folder dev/logs and dev/plugins
+Issue #440: dbt/selectors doesn't work for config tags
+Issue #437: Ensure exceptions raised from unsuccessful runs show up properly when using email alerts
+Issue #436: Add support to create the profile from Google Cloud Airflow connection (Keyfile JSON)
+Issue #432: Don’t run integration tests if PR is coming from a forked repo
+Issue #427: Add task generator methods
+Issue #425: Sweep: Drop support for Python 3.7
+Issue #422: Pass down dbt executable path from `execution_config`
+Issue #421: Crash when adding sources.yml
+Issue #420: Support OAuth authentication for Big Query
+Issue #417: Don't make DAG generation dependent on connection using `dbt_ls` mode
+Issue #416: Flag invalid select/exclude using custom mode
+Issue #413: error when using `cache_selected_only` set to True
+Issue #412: Error when using user supplied profiles feature
+Issue #411: Write logs to a temp dir when using `dbt_ls` parsing mode
+Issue #409: Select/Exclude doens't filter when load_method set to custom
+Issue #408: Add example/docs on using Airflow's context in a dbt project
+Issue #405: example_cosmos_python_models.py in dev sandbox is crashing
+Issue #401:  Unable to find the dbt executable while trying to run cosmos with virtual env
+Issue #400: How the DbtKubernetesBaseOperator is sharing the conn_id info to the K8S pod ?
+Issue #398: Multiple values for group_id
+Issue #396: Question: Best way to run models in different schedule
+Issue #393: Ensure datasets are emitted from the right task
+Issue #392: Support lists for models/seeds/snapshots
+Issue #391: Review Cosmos support for DBT tests
+Issue #387: Slack Link Incorrect in README
+Issue #384: Refactor custom project parsing so Python models have dedicated method
+Issue #383: Add MyPy Airflow support and fix issues
+Issue #382: Resolve MyPy ignore comments for Cosmos pre-commit
+Issue #376: Import path to DbtTaskGroup in quickstart no longer accurate
+Issue #372: Unify `dbt_project_name` and `dbt_root_path`
+Issue #371: convert literals to enums
+Issue #370: cosmos library does not recognize on Airflow kubernetes
+Issue #369: Rendered SQL is not available for failed runs.
+Issue #368: Support generic tests
+Issue #365: Cosmos does not parse BigQuery connections correctly
+Issue #364: Rendered SQL does not show temp table logic
+Issue #362: Slimming down tmp_dir to just the --target-dir
+Issue #356: dbt test_behavior="after_all" fails since it couldnt find profile_args
+Issue #350: GCP BigQuery service account json not supported in v0.7
+Issue #343: upgrading from 0.4.2 to 0.7.3 -> profile.yml cannot be created 
+Issue #342: tilt up not working for local development
+Issue #341: on_failure_callback to alert during test failure
+Issue #340: Documentation for dbt-spark
+Issue #337: Bug: `render_project` logs errors for dbt sources as missing model dependencies
+Issue #336: Using normal dbt profiles instead of airflow connections
+Issue #335: Add support for dbt-sqlserver
+Issue #328: Make store_compiled_sql Optional 
+Issue #327: bind=False doesn't apply when dbt run using Airlfow. 
+Issue #326: Add Netezza connector
+Issue #325: Provided instructions for installing dbt in a `venv` fail to run
+Issue #323: DbtBaseOperator missing Self.Execute()
+Issue #322: Add clearer error when Cosmos isn't pointed at a dbt project
+Issue #321: Ignore models where `materialized:ephemeral`
+Issue #319: Duplicated line in `execution-modes.rst`
+Issue #318: Clone DBT Project
+Issue #316: Update CONTRIBUTING.md to document creating a fork
+Issue #315: readme.md and Quickstart lack required information for getting started
+Issue #311: create_default_profiles error when trying to use a snowflake connection
+Issue #309: Ensure virtualenv tests are properly mocked
+Issue #308: Respect config from dbt_project.yml
+Issue #307: Address warnings when building docs
+Issue #306: Review documentation and have a consistent way of writing dbt
+Issue #305: Improve Dataset URIs
+Issue #304: Review and refactor code to avoid polluting Xcom
+Issue #303: Refactor the Cosmos application code structure
+Issue #302: Move tests outside the application code folder
+Issue #301: Enable MyPy checks
+Issue #299: Revisit filtering models
+Issue #288: Deprecate ``dbt_executable_path`` argument
+Issue #286: Extend DBT docs operator to upload S3 and Azure Blob Storage (static website)
+Issue #282: Fix the example DAGs dbt_docs.py and cosmos_seed_dag.py
+Issue #281: Unable to specific location or region for BigQuery profile
+Issue #272: All models are rendered in the sql compiled (although only one model needs to be rendered due to the select tag in  DbtTaskGroup)
+Issue #269: Support user-supplied profiles.yml files
+Issue #267: Key-based auth for Snowflake
+Issue #266: --target=dev in all environments
+Issue #265: Add rendered query to Airflow's "Rendered Template" - Feature Request
+Issue #263: What is the advised method to run dbt-deps using astronomer-cosmos ?
+Issue #261: pass --indirect-selection flag to specific task
+Issue #260: Add support dbt project render for models contract
+Issue #257: Ignore profiles.yml in dbt project directories
+Issue #251: Ensure that we have examples of Cosmos on the Registry
+Issue #250: Create a pull request template for contributors
+Issue #249: Automate the code coverage in the CI
+Issue #248: Create unit integration tests as part of the CI checks/process
+Issue #247: Create documentation for running cosmos on MWAA/Composer
+Issue #246: Update handling of profiles.yml to be the same between core cosmos and running cosmos in docker/kubernetes
+Issue #245: Build base images for running dbt in Docker
+Issue #244: Seeds dependency not rendered for Builtin overrides
+Issue #240: Add seed node configuration
+Issue #239: Add operator to generate dbt docs
+Issue #237: Dependency conflicts v0.6.0
+Issue #235: ERROR [cosmos.providers.dbt.render] Dependency not found
+Issue #234: after merging #233 some dbt tasks are failing
+Issue #232: DbtSnapshotOperator not present in operators.py in astronomer-cosmos 0.5.2 (PYPI)
+Issue #231: DbtDag graph chart is disturbed when the "clear" command is used on a task
+Issue #228: Copying dbt project to tmp ignores logs folder
+Issue #226: Possible race condition with multiple DbtTaskGroups starting at the same time.
+Issue #222: Manage virtual env automatically
+Issue #221: Does astronomer-cosmos will support dbt-hive and dbt-impala ? 
+Issue #219: Add docs for how to use with astro-provider-venv
+Issue #218: Deprecate `DbtDepsOperator` and add deps flag to `DbtRunOperator` and `DbtSeedOperator` 
+Issue #217: File lock issues with version 0.5.2
+Issue #212: Bug:`ModuleNotFoundError: No module named 'filelock'`
+Issue #208: Project parsing fails with empty yaml 
+Issue #205: Update databricks adapter for optional items
+Issue #204: No tasks in dbt DAG after using select/exclude
+Issue #203: Update dbt select/exclude documentation
+Issue #202: Add support for dbt-duckdb adapter
+Issue #201: community connectors support (athena)
+Issue #198: Change the key of the GCP service account keyfile
+Issue #190: select & exclude configs are not working as expected 
+Issue #187: Add Support for the DBT-Exasol Adapter
+Issue #186: Remove Databricks work from this repo
+Issue #184: Installation of package on astro-runtime fails
+Issue #182: Support Python models in Cosmos
+Issue #181: Airflow dbt adapter - Error getting profile "bigquery_profile" running on GCP Composer
+Issue #178: VEnv info per docs gives warning
+Issue #175: Select parameter is not working for tags
+Issue #174: Add Python 3.9 and Airflow 2.2.4 to the Databricks CI test matrix
+Issue #173: Fix and enable type check in the CI
+Issue #172: Fix and enable markdown checks in the CI
+Issue #170: Fix openlineage dependency inclusion in pyproject.toml
+Issue #161: Enable CI/CD for Databricks
+Issue #160: [Databricks] Running a Notebook task without WorkflowTaskGroup fails
+Issue #158: Add clarification in docs of how to reference connections
+Issue #151: Allow manual trigger arguments to be passed to dbt nodes
+Issue #150: Implement dbt snapshot nodes
+Issue #149: Implement dbt seed nodes
+Issue #145: Link DatabricksWorkflowTaskgroup timeout to databricks jobs timeout
+Issue #141: Developer typing for dbt_args
+Issue #139: PR preview for docs page
+Issue #135: Need documentation for the available adapters
+Issue #134: Ensure no environment variables are set to `None` before running the subprocess
+Issue #132: Databricks connection parameter issue - Airflow succeeds, cosmos fails
+Issue #128: Add support for Google Cloud Composer / KubernetesPodOperator
+Issue #124: Allow users to add arbitrary arguments to a databricks job Json.
+Issue #122: Support sending parameterized SQL queries to Databricks Jobs
+Issue #121: Expose email and webhook notifications for databricks Jobs in DatabricksWorkflowTaskGroup
+Issue #120: Users should be able to define python packages at job level and task level
+Issue #118: DbtTaskGroup should not need `dag=dag`
+Issue #115: Tasks within a Databricks Workflow Taskgroup should support individual retries.
+Issue #112: Add other tasks as dependencies of specific dbt tasks (and not as dependencies of the whole `DbtTaskGroup`)
+Issue #111: Create e2e testing in astronomer-cosmos CI/CD pipeline
+Issue #110: Add support for Graph Operators in select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #109: dbt provider don't support gcp connection defined with service account key path.
+Issue #107: Databricks connection, can't use schema
+Issue #106: Docs need updating for venv usage
+Issue #102: `dbt_args` with `"db_name"` target is not used for BigQuery profiles
+Issue #97: How to use it with multi python projects on Airflow
+Issue #95: Add support for dbt-clickhouse adapter
+Issue #94: Add  support for "tags" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #93: Add support for "source" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #92: Add support for "test_name" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #91: Add support for "test_type" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #90: Add support for "Config" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #89: Add support for "Path" select/exclude to DbtDag & DbtTaskGroup parsers
+Issue #87: Python 3.7 is not supported
+Issue #85: Use EmptyOperator instead of DummyOperator
+Issue #82: Modify venv parameter to use dbt executable path instead of venv
+Issue #81: Add databricks to docs
+Issue #79: Add DbtDepsOperator to DbtDag and DbtTaskGroup
+Issue #74: Remove pydantic dependency
+Issue #72: Add utility to get `Dataset` from dbt project + model name
+Issue #71: Add docs and examples for data-aware scheduling
+Issue #70: Add dbtRunOperation Operator
+Issue #67: Create an Airflow DAG/Task Group from a dbt selector argument
+Issue #66: Expose the `dbt_root_path` parameter of DbtProjectParser to DbtDag
+Issue #65: Rename the project_name argument
+Issue #62: Configure testing behavior
+Issue #61: Add caching to improve runtime performance
+Issue #60: Add support for dbt-dremio adapter
+Issue #59: Add support for dbt-trino adapter
+Issue #58: Add support for dbt-spark adapter
+Issue #57: Add support for dbt-synapse adapter
+Issue #56: Add support for dbt-databricks adapter
+Issue #54: DbtBaseOperator doesn't recognize execution_timeout parameter
+Issue #52: Add build steps in cicd to send docs to readthedocs
+Issue #48: Create an operator for the dbt run-operation cli command
+Issue #45: Test for missing os level packages that need to be added to the packages.txt for each db flavor
+Issue #44: Add authentication method for Redshift (IAM Authentication)
+Issue #43: Add authentication method for BigQuery (Service Account File)
+Issue #42: Add authentication method for Snowflake (Key Pair Authentication)
+Issue #41: Re-write the profiles.yml if cosmos version gets updated
+Issue #40: Vars parameter on dbt operators is getting parsed as a string
+Issue #39: Enable Open Lineage for the Dbt Operators
+Issue #38: Give users the ability to override the default taskgroup name for DbtTaskGroup
+Issue #37: Create CONTRIBUTING guide
+Issue #35: Rename operators to match parsing utilities

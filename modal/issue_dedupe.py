@@ -10,7 +10,7 @@ custom_image = Image.debian_slim().pip_install("pygithub", "pymongo", "cohere")
 
 
 @stub.function(secret=Secret.from_name("backseat"), image=custom_image)
-def check_for_dupes(repo_id: int, issue_number: int):
+def check_for_dupes(repo_id: int, issue_number: int, verbose=False):
     import os
     import cohere
     from pymongo import MongoClient
@@ -75,7 +75,8 @@ def check_for_dupes(repo_id: int, issue_number: int):
                 "score": similar_issue["score"]["value"],
             }
         )
-        pprint(similar_issue)
+        if(verbose):
+            pprint(similar_issue)
 
     issues_collection = mongo_client["backseat"]["issues"]
 
@@ -84,9 +85,9 @@ def check_for_dupes(repo_id: int, issue_number: int):
             "similarIssues": mdb_similar_issues,
         },
     }
-
-    print("updating...")
-    pprint(update)
+    if(verbose):
+        print("updating...")
+        pprint(update)
 
     # update the issue with the similar issues
     issues_collection.update_one(

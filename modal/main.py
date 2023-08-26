@@ -7,6 +7,8 @@ from modal import Stub, Secret, web_endpoint, Image
 
 from issue_dedupe import check_for_dupes
 
+import json
+
 stub = Stub()
 
 custom_image = Image.debian_slim().pip_install("pygithub", "pymongo", "cohere")
@@ -22,6 +24,75 @@ class IssueInput:
     title: str
     body: str
 
+def pretty_print_object(obj):
+    attributes = obj.__dict__
+    return '\n\n'.join(f"{key}: {value}" for key, value in attributes.items())
+
+
+def handle_pr(cohere_client, mongo_client, issue_input: IssueInput, post_process=False):
+    """
+    Handles PRs.
+    """
+    print(f"Handling pr {issue_input.issue_number} in {issue_input.repo_id}")
+    text = f"{issue_input.title}\n\n{issue_input.body}"
+
+    # write the issue id, repo id to mongodb
+    doc = {
+        "type": "pr",
+        "repoId": issue_input.repo_id,
+        "repoName": issue_input.repo_name,
+        "issueNumber": issue_input.issue_number,
+    }
+
+    mongo_client["backseat"]["pull_requests"].update_one(
+        {
+            "type": "pr",
+            "repoId": issue_input.repo_id,
+            "issueNumber": issue_input.issue_number,
+        },
+        {
+            "$set": doc,
+        },
+        upsert=True,
+    )
+
+    print("Wrote issue to pull_requests collection")
+
+    # get the issue's embeddings
+    cohere_response = cohere_client.embed(
+        texts=[text],
+        model="small",
+    )
+
+    print("Got embeddings")
+
+    doc = {
+        "type": "pr",
+        "repoId": issue_input.repo_id,
+        "repoName": issue_input.repo_name,
+        "text": text,
+        "issueNumber": issue_input.issue_number,
+        "cohereSmallEmbedding": cohere_response.embeddings[0],
+    }
+
+    update = {
+        "$set": doc,
+    }
+
+    mongo_client["backseat"]["embeddings"].update_one(
+        {
+            "type": "pr",
+            "repoId": issue_input.repo_id,
+            "issueNumber": issue_input.issue_number,
+        },
+        update,
+        upsert=True,
+    )
+
+    print("Wrote embedding to MongoDB")
+
+    if post_process:
+        print("post process prs")
 
 def handle_issue(
     cohere_client, mongo_client, issue_input: IssueInput, post_process=True
@@ -187,20 +258,42 @@ def handle_installation(cohere_client, mongo_client, repo_name: str):
     for issue in issues:
         # don't handle PRs
         if issue.pull_request is not None:
-            continue
-
-        handle_issue(
-            cohere_client,
-            mongo_client,
-            IssueInput(
-                repo_id=gh_repo.id,
-                repo_name=repo_name,
-                issue_number=issue.number,
-                title=issue.title,
-                body=issue.body,
-            ),
-            post_process=False,
-        )
+            #print(json.dumps(issue, indent=4))
+            prObj = issue.as_pull_request()
+            #print(', '.join("%s: %s" % item for item in vars(prObj).items()))
+            #print(pretty_print_object(prObj))
+            #print(json.dumps(prObj._rawData, indent=2))
+            title = prObj.title
+            body = prObj.body
+            files = prObj.get_files()
+            for filee in files:
+                #print(json.dumps(filee._rawData, indent=2))
+                body += "  " + filee.patch
+            
+            handle_pr(
+                cohere_client,
+                mongo_client,
+                IssueInput(
+                    repo_id=gh_repo.id,
+                    repo_name=repo_name,
+                    issue_number=issue.number,
+                    title=title,
+                    body=body,
+                )
+            )
+        else:
+            handle_issue(
+                cohere_client,
+                mongo_client,
+                IssueInput(
+                    repo_id=gh_repo.id,
+                    repo_name=repo_name,
+                    issue_number=issue.number,
+                    title=issue.title,
+                    body=issue.body,
+                ),
+                post_process=False,
+            )
 
     print("Done handling installation")
 
@@ -239,6 +332,26 @@ async def github_app_webhook(
     cohere_client = cohere.Client(os.getenv("COHERE_API_KEY"))
     mongo_client = MongoClient(os.getenv("MONGODB_URI"))
 
+    from github import Github, GithubIntegration
+
+    app = GithubIntegration(GITHUB_APP_ID, os.getenv("GITHUB_APP_PRIVATE_KEY"))
+    print("Got integration")
+
+    repo_name = body.get("repository").get("full_name")
+
+    owner = repo_name.split("/")[0]
+    repo = repo_name.split("/")[1]
+
+    installation = app.get_installation(owner, repo)
+    installation_token = app.get_access_token(installation.id).token
+
+    print(f"Installation token: {installation_token}")
+
+    github = Github(installation_token)
+
+    # list issues
+    gh_repo = github.get_repo(repo_name)
+
     match event_type:
         case "issues":
             issue_body = body.get("issue").get("body")
@@ -271,6 +384,33 @@ async def github_app_webhook(
 
         case "pull_request":
             print("Pull request event")
+
+            #print(json.dumps(issue, indent=4))
+
+            prObj = gh_repo.get_issue(body.get("pull_request").get("number")).as_pull_request()
+            #print(', '.join("%s: %s" % item for item in vars(prObj).items()))
+            #print(pretty_print_object(prObj))
+            #print(json.dumps(prObj._rawData, indent=2))
+            title = prObj.title
+            body = prObj.body
+            if body is None:
+                body = ""
+            files = prObj.get_files()
+            for filee in files:
+                #print(json.dumps(filee._rawData, indent=2))
+                body += "  " + filee.patch
+            
+            handle_pr(
+                cohere_client,
+                mongo_client,
+                IssueInput(
+                    repo_id=gh_repo.id,
+                    repo_name=repo_name,
+                    issue_number=prObj.number,
+                    title=title,
+                    body=body,
+                )
+            )
 
         case "installation":
             print("Installation event")

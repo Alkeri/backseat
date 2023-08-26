@@ -1,5 +1,12 @@
 
 import requests
+from dotenv import load_dotenv
+import os
+import json
+
+load_dotenv()
+
+
 # GitHub API token for authenticated requests (optional but recommended)
 api_token = os.getenv('GITHUB_TOKEN')
 
@@ -37,8 +44,11 @@ while True:
     if len(issues) == 0:
         break
 
+    for issue in issues:
+        if('pull_request' not in issue):
+            all_issues.append(issue)
     # Append the issues to our all_issues list
-    all_issues.extend(issues)
+    #all_issues.extend(issues)
 
     # Move on to the next page
     page_number += 1
@@ -46,7 +56,13 @@ while True:
 # Now all_issues contains all the issues from the repo
 print(f"Fetched {len(all_issues)} issues from {owner}/{repo}.")
 
-print(all_issues[0])
+#print(all_issues[0])
+print(json.dumps(all_issues[0], indent=2))
+
+for issue in all_issues:
+    text = issue['title'] + issue["body"]
+    
+
 
 
 # After fetching all issues in `all_issues` list
