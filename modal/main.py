@@ -5,6 +5,8 @@ from fastapi import Depends, HTTPException, status, Request
 
 from modal import Stub, Secret, web_endpoint, Image
 
+from issue_dedupe import check_for_dupes
+
 stub = Stub()
 
 custom_image = Image.debian_slim().pip_install("pygithub", "pymongo", "cohere")
@@ -14,18 +16,43 @@ GITHUB_APP_ID = 381420
 
 @dataclass
 class IssueInput:
+    repo_id: int
     repo_name: str
     issue_number: int
     title: str
     body: str
 
 
-def handle_issue(cohere_client, mongo_client, issue_input: IssueInput):
+def handle_issue(
+    cohere_client, mongo_client, issue_input: IssueInput, post_process=True
+):
     """
     Handles issues.
     """
-    print(f"Handling issue {issue_input.issue_number} in {issue_input.repo_name}")
+    print(f"Handling issue {issue_input.issue_number} in {issue_input.repo_id}")
     text = f"{issue_input.title}\n\n{issue_input.body}"
+
+    # write the issue id, repo id to mongodb
+    doc = {
+        "type": "issue",
+        "repoId": issue_input.repo_id,
+        "repoName": issue_input.repo_name,
+        "issueNumber": issue_input.issue_number,
+    }
+
+    mongo_client["backseat"]["issues"].update_one(
+        {
+            "type": "issue",
+            "repoId": issue_input.repo_id,
+            "issueNumber": issue_input.issue_number,
+        },
+        {
+            "$set": doc,
+        },
+        upsert=True,
+    )
+
+    print("Wrote issue to issues collection")
 
     # get the issue's embeddings
     cohere_response = cohere_client.embed(
@@ -37,8 +64,10 @@ def handle_issue(cohere_client, mongo_client, issue_input: IssueInput):
 
     doc = {
         "type": "issue",
+        "repoId": issue_input.repo_id,
+        "repoName": issue_input.repo_name,
         "text": text,
-        "githubId": issue_input.issue_number,
+        "issueNumber": issue_input.issue_number,
         "cohereSmallEmbedding": cohere_response.embeddings[0],
     }
 
@@ -49,17 +78,25 @@ def handle_issue(cohere_client, mongo_client, issue_input: IssueInput):
     mongo_client["backseat"]["embeddings"].update_one(
         {
             "type": "issue",
-            "githubId": issue_input.issue_number,
+            "repoId": issue_input.repo_id,
+            "issueNumber": issue_input.issue_number,
         },
         update,
         upsert=True,
     )
 
-    print("Wrote to MongoDB")
+    print("Wrote embedding to MongoDB")
+
+    if post_process:
+        check_for_dupes(
+            issue_input.repo_id,
+            issue_input.issue_number,
+        )
 
 
 @dataclass
 class IssueCommentInput:
+    repo_id: int
     repo_name: str
     issue_number: int
     comment: str
@@ -72,13 +109,14 @@ def handle_issue_comment(
     Handles issue comments.
     """
     print(
-        f"Handling issue comment {issue_comment_input.issue_number} in {issue_comment_input.repo_name}"
+        f"Handling issue comment {issue_comment_input.issue_number} in {issue_comment_input.repo_id}"
     )
 
     original_issue = mongo_client["backseat"]["embeddings"].find_one(
         {
             "type": "issue",
-            "githubId": issue_comment_input.issue_number,
+            "repoId": issue_comment_input.repo_id,
+            "issueNumber": issue_comment_input.issue_number,
         },
     )
 
@@ -98,8 +136,10 @@ def handle_issue_comment(
 
     doc = {
         "type": "issue",
+        "repoId": issue_comment_input.repo_id,
+        "repoName": original_issue["repoName"],
         "text": text,
-        "githubId": issue_comment_input.issue_number,
+        "issueNumber": issue_comment_input.issue_number,
         "cohereSmallEmbedding": cohere_response.embeddings[0],
     }
 
@@ -110,7 +150,8 @@ def handle_issue_comment(
     mongo_client["backseat"]["embeddings"].update_one(
         {
             "type": "issue",
-            "githubId": issue_comment_input.issue_number,
+            "repoId": issue_comment_input.repo_id,
+            "issueNumber": issue_comment_input.issue_number,
         },
         update,
         upsert=True,
@@ -141,7 +182,7 @@ def handle_installation(cohere_client, mongo_client, repo_name: str):
     gh_repo = github.get_repo(repo_name)
     issues = gh_repo.get_issues()
 
-    print(f"Found issues")
+    print("Found issues")
 
     for issue in issues:
         # don't handle PRs
@@ -152,12 +193,28 @@ def handle_installation(cohere_client, mongo_client, repo_name: str):
             cohere_client,
             mongo_client,
             IssueInput(
+                repo_id=gh_repo.id,
                 repo_name=repo_name,
                 issue_number=issue.number,
                 title=issue.title,
                 body=issue.body,
             ),
+            post_process=False,
         )
+
+    print("Done handling installation")
+
+    for issue in issues:
+        # don't handle PRs
+        if issue.pull_request is not None:
+            continue
+
+        check_for_dupes(
+            gh_repo.id,
+            issue.number,
+        )
+
+    print("Done postprocessing")
 
 
 @stub.function(secret=Secret.from_name("backseat"), image=custom_image)
@@ -189,6 +246,7 @@ async def github_app_webhook(
                 cohere_client,
                 mongo_client,
                 IssueInput(
+                    repo_id=body.get("repository").get("id"),
                     repo_name=body.get("repository").get("full_name"),
                     issue_number=body.get("issue").get("number"),
                     title=body.get("issue").get("title"),
@@ -201,6 +259,7 @@ async def github_app_webhook(
                 cohere_client,
                 mongo_client,
                 IssueCommentInput(
+                    repo_id=body.get("repository").get("id"),
                     repo_name=body.get("repository").get("full_name"),
                     issue_number=body.get("issue").get("number"),
                     comment=body.get("comment").get("body"),
