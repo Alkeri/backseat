@@ -24,6 +24,14 @@ async function handler(_req: NextApiRequest, res: NextApiResponse) {
       break;
     case "issues":
         console.log('Received an issue event');
+    case 'installation':
+        console.log("received installation event")
+        if(body.action == 'created') {
+            console.log("created")
+        }
+        else if(body.action == 'deleted'){
+            console.log("deleted")
+        }
 
     // Handle other events
     default:
