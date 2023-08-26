@@ -1,33 +1,30 @@
 {
   "compilerOptions": {
-    "typeRoots": ["node_modules/@types", "src/types"],
-    "target": "es2016",
-    "lib": ["dom", "dom.iterable", "esnext", "es2015.iterable"],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "target": "esnext",
+    "module": "commonjs",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/data/*": ["data/*"],
+      "@/layouts/*": ["layouts/*"],
+      "@/lib/*": ["lib/*"],
+      "@/styles/*": ["styles/*"],
+      "@/types": ["types/index"],
+      "@/types/*": ["types/*"]
+    },
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": false,
-    "downlevelIteration": true,
-    "baseUrl": "src",
-    "paths": {
-      "@assets/*": ["./src/assetsassets/*"]
-    },
-    "incremental": true
+    "jsx": "preserve"
   },
-  "exclude": ["node_modules"],
-  "include": [
-    "./src",
-    "next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js"],
+  "exclude": ["node_modules"]
 }

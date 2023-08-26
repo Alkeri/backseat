@@ -1,111 +1,41 @@
-# [Horizon UI NextJS ⚡️](https://horizon-ui.com/horizon-ui-chakra-nextjs) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https://horizon-ui.com/&text=Check%20Horizon%20UI,%20the%20trendiest%20open-source%20admin%20template%20for%20Chakra%20UI%20&%20React!)
+# MongoDB Starter – Developer Directory
 
-![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
-[![GitHub issues open](https://img.shields.io/github/issues/horizon-ui/horizon-ui-chakra-nextjs.svg?maxAge=2592000)](https://github.com/horizon-ui/horizon-ui-chakra-nextjs/issues?q=is%3Aopen+is%3Aissue)
+A developer directory built on [Next.js](https://nextjs.org/) and [MongoDB Atlas](https://www.mongodb.com/atlas/database), deployed on [Vercel](https://vercel.com/) with the [Vercel + MongoDB integration](https://vercel.com/integrations/mongodbatlas).
 
-<p>&nbsp;</p>
+![](/public/og.png)
 
-[<img alt="Horizon UI NextJS" src="https://i.ibb.co/mtLkcYL/horizon-ui-nextjs-free.png" /> ](https://github.com/horizon-ui/horizon-ui-chakra-nextjs)
+Featured on the [MongoDB World](https://www.mongodb.com/world-2022) keynote.
 
-<p>&nbsp;</p>
+## Deployment Instructions
 
+You will need to create a [GitHub OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) to use this starter. Here are the steps:
 
-Get started and build your dream web app with Horizon UI NextJS, the most trendiest & innovative Open Source Admin Template for Chakra UI, React & NextJS!
+1. Go to https://github.com/settings/developers and create a new OAuth application
+2. Name your application **"MongoDB Starter"**
+3. Set the homepage URL to **`https://vercel.app`** for now (we'll change this later)
+4. Set the authorization callback URL to **`https://vercel.app/api/auth/callback/github`** for now (we'll change this later)
+5. Click "Register application".
+6. Once the application is created, copy the "Client ID". This will be your **`GITHUB_CLIENT_ID`**.
+7. Generate a new client secret and copy that too. This will be your **`GITHUB_CLIENT_SECRET`**.
+8. Generate a random secret [here](https://generate-secret.vercel.app/32). This will be your **`NEXTAUTH_SECRET`**.
+9. Click on this button below to clone and deploy this template to Vercel.
 
----
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fmongodb-starter&project-name=mongodb-nextjs&repository-name=mongodb-nextjs&demo-title=MongoDB%20Developer%20Directory&demo-description=Log%20in%20with%20GitHub%20to%20create%20a%20directory%20of%20contacts.&demo-url=https%3A%2F%2Fmongodb.vercel.app%2F&demo-image=https%3A%2F%2Fmongodb.vercel.app%2Fog.png&integration-ids=oac_jnzmjqM10gllKmSrG0SGrHOH&env=GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET,NEXTAUTH_SECRET&envDescription=Instructions%20on%20how%20to%20configure%20these%20env%20vars:&envLink=https://github.com/vercel/mongodb-starter/blob/main/.env.example)
 
-### Introduction
+10. Once your application is deployed, **edit the homepage & callback URLs in your GitHub OAuth App to match your deployment URL**.
 
-Designed for those who like modern UI elements and beautiful websites. Made of
-hundred of elements, designed blocks and fully coded pages, Horizon UI is ready
-to help you create stunning websites and webapps.
+## Demo
 
-Save hundreds of hours trying to create and develop a dashboard from scratch.
-The fastest, most responsive & trendiest dashboard is here. Seriously.
+https://mongodb.vercel.app
 
-With Horizon UI you will find many examples for pages like NFTs Pages,
-Authentication Pages, Profile and so on. Just choose between a Basic Design or a
-cover and you are good to go!
+## Vercel + MongoDB Integration
 
-### 🎉 [NEW] Horizon UI Components
-All the main components from both versions, this will help you to see and interact with all & the latest added components of Horizon (also, new components are on the way, stay tuned)! ⚡️
-<a href="https://horizon-ui.com/components/?ref=readme-horizon-nextjs" target="_blank">See all components</a>
+https://vercel.com/integrations/mongodbatlas
 
+## Tech Stack
 
-### Documentation
-
-Each element is well presented in a very complex documentation. You can read
-more about the <a href="https://horizon-ui.com/documentation/docs/introduction?ref=readme-horizon-nextjs" target="_blank">documentation
-here.</a>
-
-### Quick Start
-
-Install Horizon UI by running either of the following:
-
-- Install NodeJS LTS from [NodeJs Official Page](https://nodejs.org/en/?ref=horizon-documentation)
-  (NOTE: Product only works with LTS version)
-
-- Install Yarn CLI from [Yarn Official Page](https://yarnpkg.com/cli/install?ref=horizon-documentation)
-
-Clone the repository with the following command:
-
-```bash
-git clone https://github.com/horizon-ui/horizon-ui-chakra-nextjs.git
-```
-
-Run in terminal this command:
-
-```bash
-yarn install
-```
-
-Then run this command to start your local server
-
-```bash
-yarn dev
-```
-
-### Example Pages
-
-If you want to get inspiration or just show something directly to your clients, you can jump start your development with our pre-built example pages. You will be able to quickly set up the basic structure for your web project. View <a href="https://horizon-ui.com/horizon-ui-chakra-nextjs/?ref=readme-horizon-nextjs" target="_blank">example pages here.</a>
-
-### Versions
-
-| Free Version                                                                                                       | PRO Version                                                                                                               |
-| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| [![Horizon UI NextJS](https://i.ibb.co/mtLkcYL/horizon-ui-nextjs-free.png)](https://www.horizon-ui.com/?ref=readme-horizon-nextjs) | [![Horizon UI NextJS PRO](https://i.ibb.co/581cvkJ/horizon-ui-next-pro.png")](https://www.horizon-ui.com/pro?ref=readme-horizon-nextjs) |
-
-### Figma Version
-
-Horizon UI is available in Figma format as well! Check it out on Figma
-Community! 🎨
-[See the Horizon UI Figma design files](https://bit.ly/horizon-figma)
-
-### Reporting Issues
-
-We use GitHub Issues as the official bug tracker for the Horizon UI. Here are
-some advices for our users that want to report an issue:
-
-1. Make sure that you are using the latest version of the Horizon UI Dashbaord.
-   Check the CHANGELOG from your dashboard on our
-   [CHANGE LOG File](https://github.com/horizon-ui/horizon-ui-chakra-nextjs/blob/main/CHANGELOG.md?ref=readme-horizon-nextjs).
-2. Providing us reproducible steps for the issue will shorten the time it takes
-   for it to be fixed.
-3. Some issues may be browser specific, so specifying in what browser you
-   encountered the issue might help.
-
----
-
-### Community
-
-Connect with the community! Feel free to ask questions, report issues, and meet
-new people that already use Horizon UI!
-
-💬 [Join the #HorizonUI Discord Community!](https://discord.gg/f6tEKFBd4m)
-
-### Copyright and license
-
-⭐️ [Copyright 2022 Simmmple ](https://www.simmmple.com/?ref=readme-horizon-nextjs)
-
-📄 [Horizon UI License](https://www.simmmple.com/licenses?ref=readme-horizon-nextjs)
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [NextAuth.js](https://next-auth.js.org/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas/database)
+- [Vercel](https://vercel.com/)
