@@ -24,7 +24,11 @@ export async function listDBIssues(
   const client = await clientPromise;
   const collection = client.db('backseat').collection('issues');
   const dbIssues = await collection
-    .find({})
+    .find({
+      $where: function () {
+        return this.repoName == org + '/' + repo;
+      }
+    })
     .sort({ issueNumber: -1 })
     .limit(100)
     .toArray();

@@ -176,6 +176,26 @@
         "async": false
       }
     },
+    "(app-client)/./app/search.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/search.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      },
+      "": {
+        "id": "(sc_client)/./app/search.tsx",
+        "name": "",
+        "chunks": [],
+        "async": false
+      },
+      "default": {
+        "id": "(sc_client)/./app/search.tsx",
+        "name": "default",
+        "chunks": [],
+        "async": false
+      }
+    },
     "(app-client)/./app/dismiss-button.tsx": {
       "*": {
         "id": "(sc_client)/./app/dismiss-button.tsx",
@@ -290,26 +310,6 @@
       "track": {
         "id": "(sc_client)/./node_modules/.pnpm/@vercel+analytics@1.0.1/node_modules/@vercel/analytics/dist/react/index.js",
         "name": "track",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./app/search.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/search.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      },
-      "": {
-        "id": "(sc_client)/./app/search.tsx",
-        "name": "",
-        "chunks": [],
-        "async": false
-      },
-      "default": {
-        "id": "(sc_client)/./app/search.tsx",
-        "name": "default",
         "chunks": [],
         "async": false
       }
@@ -989,6 +989,30 @@
       ],
       "async": false
     },
+    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx": {
+      "id": "(app-client)/./app/search.tsx",
+      "name": "*",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx#": {
+      "id": "(app-client)/./app/search.tsx",
+      "name": "",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx#default": {
+      "id": "(app-client)/./app/search.tsx",
+      "name": "default",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
     "/Users/iancmoritz/Projects/backseat/webapp/app/globals.css#": {
       "id": "null",
       "name": "default",
@@ -1193,30 +1217,6 @@
       "name": "track",
       "chunks": [
         "app/layout:static/chunks/app/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx": {
-      "id": "(app-client)/./app/search.tsx",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx#": {
-      "id": "(app-client)/./app/search.tsx",
-      "name": "",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/iancmoritz/Projects/backseat/webapp/app/search.tsx#default": {
-      "id": "(app-client)/./app/search.tsx",
-      "name": "default",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
       ],
       "async": false
     }
