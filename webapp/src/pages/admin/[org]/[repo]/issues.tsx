@@ -42,9 +42,9 @@ export default function Issues({ org, repo, issues }: Params) {
         <Text>{org}</Text>
         <Text>Repo ID: {repo}</Text>
         {issues.map((issue: DBIssue) => (
-          <Text>
+          <Text key={issue._id}>
             {" "}
-            Issue ID: {issue._id} Issue Title: {issue.issueNumber}{" "}
+            Issue ID: {issue._id} Issue Repo: {issue.repoName}{" "}
           </Text>
         ))}
 
