@@ -10,6 +10,10 @@ import { defaultMetaProps } from '@/components/layout/meta';
 import clientPromise from '@/lib/mongodb';
 
 export default function Home({ user }: { user: UserProps }) {
+  if (!user) {
+    return <div>loading...</div>;
+  }
+
   return <Profile user={user} settings={false} />;
 }
 

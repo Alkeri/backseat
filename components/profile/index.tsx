@@ -30,10 +30,10 @@ export default function Profile({
   const { data: session } = useSession();
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState({
-    username: user.username,
-    image: user.image,
+    username: user.username || '',
+    image: user.image || '',
     bio: user.bio || '',
-    bioMdx: user.bioMdx
+    bioMdx: user.bioMdx || ''
   });
 
   if (data.username !== user.username) {
@@ -230,7 +230,13 @@ export default function Profile({
               <CheckIcon className="h-4 w-4 text-white" />
             )}
           </button>
-          <Link href={`/${user.username}`} shallow replace scroll={false}>
+          <Link
+            href={`/${user.username}`}
+            shallow
+            replace
+            scroll={false}
+            legacyBehavior
+          >
             <a className="rounded-full border border-gray-800 hover:border-white w-12 h-12 flex justify-center items-center transition-all">
               <XIcon className="h-4 w-4 text-white" />
             </a>
@@ -243,6 +249,7 @@ export default function Profile({
           shallow
           replace
           scroll={false}
+          legacyBehavior
         >
           <a className="fixed bottom-10 right-10 rounded-full border bg-black border-gray-800 hover:border-white w-12 h-12 flex justify-center items-center transition-all">
             <EditIcon className="h-4 w-4 text-white" />
